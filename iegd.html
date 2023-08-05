@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Google Maps API Example</title>
+  </head>
+  <body>
+    <h1>Search Data using Google Maps API</h1>
+    <form id="searchForm">
+      <label for="pincode">Enter Pincode:</label>
+      <input type="text" id="pincode" required /><br />
+
+      <label for="categories">Select Categories:</label>
+      <select id="categories" required>
+        <option value="">Select Category</option>
+        <option value="coffee_shop">Coffee Shops</option>
+        <option value="eatery">Eateries</option>
+        <option value="shops">Shops</option>
+        <!-- Add more categories as needed --></select
+      ><br />
+
+      <button type="button" onclick="getData()">Get Data</button>
+    </form>
+
+    <script>
+      async function getData() {
+        const pincode = document.getElementById("pincode").value;
+        const category = document.getElementById("categories").value;
+
+        if (!pincode || !category) {
+          alert("Please fill all the details before clicking Get Data.");
+          return;
+        }
+
+        // TODO: Make Nearby Places API call to get 20 place_ids based on pincode and category.
+        // Replace the following line with the actual Nearby Places API call.
+        const placeIds = await fakeNearbyPlacesApiCall(pincode, category);
+
+        const placeDetailsPromises = placeIds.map(async (placeId) => {
+          // TODO: Make Place Details API call for each place_id.
+          // Replace the following line with the actual Place Details API call.
+          return await fakePlaceDetailsApiCall(placeId);
+        });
+
+        const placeDetails = await Promise.all(placeDetailsPromises);
+
+        // Prepare data for Excel file format (tab-separated values for simplicity).
+        let excelData = "Sn0.\tName\tAddress\tMobile\n";
+
+        placeDetails.forEach((place, index) => {
+          const sn = index + 1;
+          const name = place.name;
+          const address = place.address;
+          const mobile = place.mobile;
+          excelData += `${sn}\t${name}\t${address}\t${mobile}\n`;
+        });
+
+        // Create and download the Excel file.
+        const blob = new Blob([excelData], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "data.xlsx";
+        a.click();
+      }
+
+      // Fake API calls (replace with actual API calls)
+      function fakeNearbyPlacesApiCall(pincode, category) {
+        // Simulate the API call and return 20 place_ids.
+        const placeIds = Array.from(
+          { length: 20 },
+          (_, index) => `placeId${index}`
+        );
+        return new Promise((resolve) =>
+          setTimeout(() => resolve(placeIds), 1000)
+        );
+      }
+
+      function fakePlaceDetailsApiCall(placeId) {
+        // Simulate the API call and return place details for a given place_id.
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({
+              name: `Coffee Hub Shop no ${placeId.slice(-1)}`,
+              address:
+                "Salunke Vihar Rd, behind badai sweet, Kondhwa, Pune, Maharashtra 411048, India",
+              mobile: "099752 92906",
+            });
+          }, 500);
+        });
+      }
+    </script>
+  </body>
+</html>
