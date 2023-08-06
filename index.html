@@ -21,7 +21,8 @@
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 40px;
-        page-break-inside: avoid;
+        page-break-inside: avoid; /* Prevent breaking tables across pages */
+        page-break-before: always; /* Start each month on a new page */
       }
 
       .calendar-table th,
