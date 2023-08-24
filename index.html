@@ -73,7 +73,7 @@
       }
 
       .calendar-table img:hover {
-        transform: scale(1.7);
+        transform: scale(2.5);
       }
 
       .spacer-row td {
@@ -163,6 +163,11 @@
     </button>
 
     <script>
+      function getRandomCatEmoji() {
+        const catEmojis = ["😺", "😸", "😻", "🙀", "😽", "😼", "🐱"];
+        const randomIndex = Math.floor(Math.random() * catEmojis.length);
+        return catEmojis[randomIndex];
+      }
       function redirectToNextYear() {
         window.location.href = "2024Cal.html";
       }
@@ -300,8 +305,26 @@
                 image.alt = "Image " + dayCounter;
 
                 imageButton.appendChild(image);
-                dayCell.appendChild(document.createTextNode(dayCounter));
-                dayCell.appendChild(document.createElement("br"));
+
+                // Add cat emojis before and after the day number
+                var dayNumberContainer = document.createElement("div");
+                dayNumberContainer.style.textAlign = "center";
+                dayNumberContainer.style.fontSize = "21px";
+
+                var catEmojiBefore = getRandomCatEmoji();
+                var catEmojiAfter = getRandomCatEmoji();
+
+                var dayNumberText = document.createTextNode(dayCounter);
+                var dayRandomText = document.createTextNode(catEmojiAfter);
+
+                // dayNumberContainer.appendChild(
+                //   document.createTextNode(catEmojiBefore)
+                // );
+                // dayNumberContainer.appendChild(document.createElement("br"));
+                dayNumberContainer.appendChild(dayNumberText);
+                dayNumberContainer.appendChild(dayRandomText);
+
+                dayCell.appendChild(dayNumberContainer);
                 dayCell.appendChild(imageButton);
               } else {
                 dayCell.textContent = dayCounter;
