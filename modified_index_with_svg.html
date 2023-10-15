@@ -151,32 +151,6 @@
         top: 70px;
         right: 20px;
       }
-
-      /* Cat Paw Design */
-      .paw {
-        width: 30px;
-        height: 30px;
-        background-color: #fff;
-        border-radius: 50%;
-        position: absolute;
-        opacity: 0;
-        animation: fadeInOut 3s infinite;
-        box-shadow: 35px -5px 0 -5px #fff, 60px -5px 0 -5px #fff,
-          20px 20px 0 -10px #fff, 70px 20px 0 -10px #fff;
-      }
-
-      /* Animation */
-      @keyframes fadeInOut {
-        0% {
-          opacity: 0;
-        }
-        50% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0;
-        }
-      }
     </style>
   </head>
   <body>
@@ -376,27 +350,54 @@
   </body>
 </html>
 
+<!-- Cat Paw SVG Icon -->
+<svg
+  class="cat-paw"
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 512 512"
+  style="display: none"
+>
+  <path
+    d="M255.15 63.2c-76.9 0-139.3 62.4-139.3 139.3 0 58.2 89.3 176.6 139.3 240.6 50-64 139.3-182.4 139.3-240.6 0-76.9-62.4-139.3-139.3-139.3zm0 278.9c-45.8-58.2-139.3-168-139.3-139.6 0-58.2 47.4-105.7 105.7-105.7s105.7 47.4 105.7 105.7c0 28.4-93.6 138.3-139.3 139.6zm0 0c-45.8-58.2-139.3-168-139.3-139.6 0-58.2 47.4-105.7 105.7-105.7s105.7 47.4 105.7 105.7c0 28.4-93.6 138.3-139.3 139.6z"
+  />
+  <circle cx="380.4" cy="151.5" r="56" />
+  <circle cx="131.6" cy="151.5" r="56" />
+  <circle cx="80.8" cy="360.8" r="80.8" />
+  <circle cx="431.2" cy="360.8" r="80.8" />
+</svg>
+
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     setInterval(generateRandomPaw, 2000); // Generate a paw every 2 seconds
 
     function generateRandomPaw() {
-      var paw = document.createElement("div");
-      paw.classList.add("paw");
+      var originalPaw = document.querySelector(".cat-paw");
+      var paw = originalPaw.cloneNode(true);
+
+      paw.style.display = "block";
+      paw.style.position = "absolute";
+      paw.style.width = "30px";
+      paw.style.opacity = "0";
+      paw.style.transition = "opacity 1.5s";
 
       // Random positions for the paw
-      var randomX = Math.floor(Math.random() * window.innerWidth);
-      var randomY = Math.floor(Math.random() * window.innerHeight);
+      var randomX = Math.floor(Math.random() * window.innerWidth - 50);
+      var randomY = Math.floor(Math.random() * window.innerHeight - 50);
 
       paw.style.left = randomX + "px";
       paw.style.top = randomY + "px";
 
       document.body.appendChild(paw);
 
+      // Animate the paw's opacity
+      setTimeout(function () {
+        paw.style.opacity = "1";
+      }, 50);
+
       // Remove the paw after animation completes
       setTimeout(function () {
         document.body.removeChild(paw);
-      }, 3000); // 3 seconds (duration of animation)
+      }, 3500); // 3.5 seconds (duration of animation + delay)
     }
   });
 </script>
