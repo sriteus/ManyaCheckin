@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title style="color: #b5838d">2023 Calendar</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f7e1d7;
+        padding: 20px;
+        cursor: url("normal.cur"), auto;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 40px;
+        font-family: "Comic Sans MS", cursive;
+        color: #d18591;
+      }
+
+      .calendar-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 40px;
+        page-break-inside: avoid; /* Prevent breaking tables across pages */
+        page-break-before: always; /* Start each month on a new page */
+      }
+
+      .calendar-table th,
+      .calendar-table td {
+        border: 2px solid #ffffff;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        border-radius: 10px;
+        height: 180px; /* Adjust the height as per your requirement */
+        width: 180px; /* Adjust the width as per your requirement */
+        vertical-align: middle;
+      }
+
+      .calendar-table th {
+        background-color: #d18591;
+        font-size: 32px;
+        font-family: "Comic Sans MS", cursive;
+        color: #ffffff;
+      }
+
+      .calendar-table td {
+        background-color: #6e8ec1;
+        color: #ffffff;
+        font-family: "Arial Black", sans-serif;
+      }
+
+      .calendar-table .month-column {
+        background-color: #9f86a3;
+        color: #ffffff;
+        font-size: 40px;
+        font-family: "Copperplate", cursive;
+      }
+
+      .calendar-table .week-column {
+        background-color: #d18591;
+        color: #ffffff;
+        font-family: "Comic Sans MS", cursive;
+      }
+
+      .calendar-table img {
+        width: 100%;
+        height: auto;
+        max-height: 250px;
+        object-fit: contain;
+        margin-top: 10px;
+        transition: transform 0.4s;
+      }
+
+      .calendar-table img:hover {
+        transform: scale(2.5);
+        cursor: url("normal.cur"), auto;
+      }
+
+      .spacer-row td {
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      .calendar-table button {
+        display: inline-block;
+        padding: 0;
+        border: none;
+        background: none;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .calendar-table button img {
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+        border: 2px solid black;
+        border-radius: 20px;
+        margin-top: 5px;
+      }
+
+      /* Button to save as PDF */
+      .pdf-button {
+        display: block;
+        width: 120px;
+        margin: 20px auto;
+        padding: 10px;
+        text-align: center;
+        background-color: #d18591;
+        color: #ffffff;
+        border: 3px solid black;
+        border-radius: 5px;
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+
+      /* Button to download all images as zip */
+      .zip-button {
+        display: block;
+        width: 180px;
+        margin: 20px auto;
+        padding: 10px;
+        text-align: center;
+        background-color: #d18591;
+        color: #ffffff;
+        border: 3px solid black;
+        border-radius: 5px;
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+      }
+
+      /* Button for Next Year */
+      .next-year-button {
+        display: block;
+        width: 120px;
+        margin: 20px auto;
+        padding: 10px;
+        text-align: center;
+        background-color: #d18591;
+        color: #ffffff;
+        border: 3px solid black;
+        border-radius: 5px;
+        cursor: pointer;
+        position: absolute;
+        top: 70px;
+        right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>2023 Manyaa's Outfit Check</h1>
+
+    <button class="pdf-button" onclick="printPDF()">Save as PDF</button>
+    <button class="zip-button" onclick="downloadImages()">
+      Download All Images
+    </button>
+    <button class="next-year-button" onclick="redirectToNextYear()">
+      2024 Calendar
+    </button>
+
+    <script>
+      function getRandomCatEmoji() {
+        const catEmojis = ["😺", "😸", "😻", "🙀", "😽", "🐱"];
+        const randomIndex = Math.floor(Math.random() * catEmojis.length);
+        return catEmojis[randomIndex];
+      }
+      function redirectToNextYear() {
+        window.location.href = "2024Cal.html";
+      }
+      var monthNames = [
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+
+      function downloadImage(imageName) {
+        var imageUrl = "assets/images/" + imageName;
+        window.open(imageUrl, "_blank");
+      }
+
+      function imageExists(imageUrl) {
+        var http = new XMLHttpRequest();
+        http.open("HEAD", imageUrl, false);
+        http.send();
+        return http.status !== 404;
+      }
+
+      function printPDF() {
+        window.print();
+      }
+
+      function downloadImages() {
+        var zip = new JSZip();
+
+        for (var month = 5; month < 12; month++) {
+          var daysInMonth = new Date(2023, month + 1, 0).getDate();
+
+          for (var dayCounter = 1; dayCounter <= daysInMonth; dayCounter++) {
+            var imageName =
+              "Manyaa-" +
+              monthNames[month - 5].toLowerCase() +
+              dayCounter +
+              ".jpg";
+            var imageUrl = "assets/images/" + imageName;
+
+            if (imageExists(imageUrl)) {
+              var imageContent = getImageContent(imageUrl);
+              zip.file("images/" + imageName, imageContent, { base64: true });
+            }
+          }
+        }
+
+        zip.generateAsync({ type: "blob" }).then(function (content) {
+          saveAs(content, "images.zip");
+        });
+      }
+
+      function getImageContent(url) {
+        return new Promise(function (resolve, reject) {
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", url, true);
+          xhr.responseType = "arraybuffer";
+
+          xhr.onload = function (e) {
+            if (xhr.status === 200) {
+              var arrayBuffer = xhr.response;
+              var byteArray = new Uint8Array(arrayBuffer);
+              var binary = "";
+              for (var i = 0; i < byteArray.byteLength; i++) {
+                binary += String.fromCharCode(byteArray[i]);
+              }
+              resolve(btoa(binary));
+            } else {
+              reject();
+            }
+          };
+
+          xhr.send();
+        });
+      }
+
+      for (var month = 5; month < 12; month++) {
+        var table = document.createElement("table");
+        table.classList.add("calendar-table");
+
+        var monthHeaderRow = document.createElement("tr");
+        var monthHeaderCell = document.createElement("th");
+        monthHeaderCell.setAttribute("colspan", "7");
+        monthHeaderCell.textContent = monthNames[month - 5];
+        monthHeaderCell.classList.add("month-column"); // Apply month-column class
+        monthHeaderRow.appendChild(monthHeaderCell);
+        table.appendChild(monthHeaderRow);
+
+        var dayOfWeekRow = document.createElement("tr");
+        var daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        for (var i = 0; i < daysOfWeek.length; i++) {
+          var dayOfWeekCell = document.createElement("th");
+          dayOfWeekCell.textContent = daysOfWeek[i];
+          dayOfWeekCell.classList.add("week-column"); // Apply week-column class
+          dayOfWeekRow.appendChild(dayOfWeekCell);
+        }
+        table.appendChild(dayOfWeekRow);
+
+        var firstDay = new Date(2023, month, 1).getDay();
+        var daysInMonth = new Date(2023, month + 1, 0).getDate();
+
+        var dayCounter = 1;
+
+        for (
+          var week = 0;
+          week < Math.ceil((daysInMonth + firstDay) / 7);
+          week++
+        ) {
+          var weekRow = document.createElement("tr");
+
+          for (var dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+            var dayCell = document.createElement("td");
+
+            if (week === 0 && dayOfWeek < firstDay) {
+              dayCell.classList.add("spacer-row");
+            } else if (dayCounter <= daysInMonth) {
+              var imageName =
+                "Manyaa-" +
+                monthNames[month - 5].toLowerCase() +
+                dayCounter +
+                ".jpg";
+              var imageUrl = "assets/images/" + imageName;
+              if (imageExists(imageUrl)) {
+                var imageButton = document.createElement("button");
+                imageButton.setAttribute(
+                  "onclick",
+                  'downloadImage("' + imageName + '")'
+                );
+
+                var image = document.createElement("img");
+                image.src = imageUrl;
+                image.alt = "Image " + dayCounter;
+
+                imageButton.appendChild(image);
+
+                // Add cat emojis before and after the day number
+                var dayNumberContainer = document.createElement("div");
+                dayNumberContainer.style.textAlign = "center";
+                dayNumberContainer.style.fontSize = "21px";
+
+                var catEmojiBefore = getRandomCatEmoji();
+                var catEmojiAfter = getRandomCatEmoji();
+
+                var dayNumberText = document.createTextNode(dayCounter);
+                var dayRandomText = document.createTextNode(catEmojiAfter);
+
+                // dayNumberContainer.appendChild(
+                //   document.createTextNode(catEmojiBefore)
+                // );
+                // dayNumberContainer.appendChild(document.createElement("br"));
+                dayNumberContainer.appendChild(dayNumberText);
+                dayNumberContainer.appendChild(dayRandomText);
+
+                dayCell.appendChild(dayNumberContainer);
+                dayCell.appendChild(imageButton);
+              } else {
+                dayCell.textContent = dayCounter;
+              }
+              dayCounter++;
+            } else {
+              dayCell.classList.add("spacer-row");
+            }
+
+            weekRow.appendChild(dayCell);
+          }
+
+          table.appendChild(weekRow);
+        }
+
+        document.body.appendChild(table);
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.3.0/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  </body>
+</html>
